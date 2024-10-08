@@ -2,16 +2,198 @@
 <html>
 <head>
 <meta charset="utf-8" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
-<title>邵宇傻逼</title>
+<title>下班倒计时</title>
+<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.2.2/vue.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/axios/1.4.0/axios.min.js"></script>
 <style>
-img {
+#box div {
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
+}
+#box div img {
     width: 100%;
-    max-width: 540px;
+    display: block;
 }
 </style>
 </head>
 <body>
-    <img src="./shaoyu.jpg" alt="邵宇傻逼" />
-    <noscript />
+<div id="app">
+  <div v-if="show">
+    <p>请选择下班时间：</p>
+    <select v-model="hour" :disabled="edit">
+        <option value="00">00</option>
+        <option value="01">01</option>
+        <option value="02">02</option>
+        <option value="03">03</option>
+        <option value="04">04</option>
+        <option value="05">05</option>
+        <option value="06">06</option>
+        <option value="07">07</option>
+        <option value="08">08</option>
+        <option value="09">09</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15">15</option>
+        <option value="16">16</option>
+        <option value="17">17</option>
+        <option value="18">18</option>
+        <option value="19">19</option>
+        <option value="20">20</option>
+        <option value="21">21</option>
+        <option value="22">22</option>
+        <option value="23">23</option>
+    </select>
+    <select v-model="minute" :disabled="edit">
+        <option value="00">00</option>
+        <option value="01">01</option>
+        <option value="02">02</option>
+        <option value="03">03</option>
+        <option value="04">04</option>
+        <option value="05">05</option>
+        <option value="06">06</option>
+        <option value="07">07</option>
+        <option value="08">08</option>
+        <option value="09">09</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15">15</option>
+        <option value="16">16</option>
+        <option value="17">17</option>
+        <option value="18">18</option>
+        <option value="19">19</option>
+        <option value="20">20</option>
+        <option value="21">21</option>
+        <option value="22">22</option>
+        <option value="23">23</option>
+        <option value="24">24</option>
+        <option value="25">25</option>
+        <option value="26">26</option>
+        <option value="27">27</option>
+        <option value="28">28</option>
+        <option value="29">29</option>
+        <option value="30">30</option>
+        <option value="31">31</option>
+        <option value="32">32</option>
+        <option value="33">33</option>
+        <option value="34">34</option>
+        <option value="35">35</option>
+        <option value="36">36</option>
+        <option value="37">37</option>
+        <option value="38">38</option>
+        <option value="39">39</option>
+        <option value="40">40</option>
+        <option value="41">41</option>
+        <option value="42">42</option>
+        <option value="43">43</option>
+        <option value="44">44</option>
+        <option value="45">45</option>
+        <option value="46">46</option>
+        <option value="47">47</option>
+        <option value="48">48</option>
+        <option value="49">49</option>
+        <option value="50">50</option>
+        <option value="51">51</option>
+        <option value="52">52</option>
+        <option value="53">53</option>
+        <option value="54">54</option>
+        <option value="55">55</option>
+        <option value="56">56</option>
+        <option value="57">57</option>
+        <option value="58">58</option>
+        <option value="59">59</option>
+    </select>
+    <div style="margin-top: 50px;">
+      <p>还剩 {{hours}} 小时 {{minutes}} 分钟 {{seconds}} 秒下班</p>
+      <p>{{fish.weekend}}</p>
+      <p>{{fish.pay}}</p>
+      <p>{{fish.holiday}}</p>
+    </div>
+  </div>
+  <div v-else id="box">
+    <div v-if="moment().day()===1"><img src="./shaoyu.jpg" @click="showClick">加点薪水</div>
+    <div v-else-if="moment().day()===2"><img src="./shaoyu.jpg" @click="showClick">加点薪水</div>
+    <div v-else-if="moment().day()===3"><img src="./shaoyu.jpg" @click="showClick">加点薪水</div>
+    <div v-else-if="moment().day()===4"><img src="./shaoyu.jpg" @click="showClick">V我50</div>
+    <div v-else-if="moment().day()===5"><img src="./shaoyu.jpg" @click="showClick">今天周五，有啥事下周再说</div>
+    <div v-else><img src="./shaoyu.jpg" @click="showClick">今日休息，停舔三天</div>
+  </div>
+</div>
+<script>
+new Vue({
+  el: '#app',
+  data: {
+    hour: '18',
+    minute: '30',
+    hours: '0',
+    minutes: '0',
+    seconds: '0',
+    timer: null,
+    edit: false,
+    fish: {},
+    show: false
+  },
+  methods: {
+    test() {
+        var start_date = moment()
+        var end_date = moment().set({'hour': this.hour, 'minute': this.minute, 'second': 0, 'millisecond': 0})
+        if(start_date.isBefore(end_date)) {
+            var diff = end_date.diff(start_date, 'seconds')
+            this.hours = parseInt(diff / 3600)
+            diff -= this.hours * 3600
+            this.minutes = parseInt(diff / 60)
+            this.seconds = diff - this.minutes * 60
+            document.title = `${this.hours} ${this.minutes} ${this.seconds}`
+        } else {
+            clearInterval(this.timer)
+            this.edit = true
+            alert('下班了还不快滚！！！')
+        }
+    },
+    showClick () {
+      this.show = !this.show
+    }
+  },
+  watch: {
+    hour(val) {
+      localStorage.setItem('hour', val)
+      this.hour = val
+      this.test()
+    },
+    minute(val) {
+      localStorage.setItem('minute', val)
+      this.minute = val
+      this.test()
+    }
+  },
+  mounted() {
+    this.hour = localStorage.getItem('hour') || '18'
+    this.minute = localStorage.getItem('minute') || '30'
+    localStorage.setItem('hour', this.hour)
+    localStorage.setItem('minute', this.minute)
+    this.timer = setInterval(() => {
+        this.test()
+    }, 500)
+    axios.get("https://api.0x0z.com/api/fish/feel").then(res => {
+        if(res.data.ok) {
+          this.fish = res.data.data
+        }
+    })
+    const thiz = this
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') {
+        thiz.show = false
+      }
+    })
+  }
+})
+</script>
 </body>
 </html>
